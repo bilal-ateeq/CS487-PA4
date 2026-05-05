@@ -256,49 +256,8 @@ Description: This screenshot shows an order with a quantity exceeding 100 being 
 ## Task 8: Write-up and Architecture Diagram (5 points)
 
 ### Evidence 8.1: Architecture Diagram
-```graph TD
-    %% Define External Entities
-    User([👨‍💻 User / Web Browser])
-    GitHub([🐙 GitHub Actions CI/CD])
 
-    %% Define Azure Resource Group box
-    subgraph "Resource Group: rg-pa4-26100254 (Sweden Central)"
-        %% UI and Compute Services
-        WebApp[🌐 Azure App Service<br/>Frontend Web UI]
-        FuncApp[⚡ Azure Function App<br/>Durable Orchestrator]
-        AKS[🚢 Azure Kubernetes Service<br/>Validator API]
-        ACI[📦 Azure Container Instances<br/>PDF Report Job]
-        
-        %% Storage & Registry
-        Storage[(💾 Azure Storage Account<br/>Blob Container)]
-        ACR[🔐 Azure Container Registry<br/>Docker Images]
-        
-        %% Security
-        MI{{🔑 Managed Identity}}
-    end
-
-    %% CI/CD Flow
-    GitHub -->|Continuous Deployment| WebApp
-
-    %% Registry Flows (Hidden dependencies)
-    ACR -.->|Pulls func-app:v1| FuncApp
-    ACR -.->|Pulls validate-api:v1| AKS
-    ACR -.->|Pulls report-job:v1| ACI
-
-    %% Application Data Flow
-    User -->|1. Submits Order Form| WebApp
-    WebApp -->|2. HTTP POST Status Trigger| FuncApp
-    
-    FuncApp -->|3. validate_activity| AKS
-    AKS -.->|Returns Valid/Rejected| FuncApp
-    
-    FuncApp -->|4. report_activity (If Valid)| ACI
-    MI -.->|Grants RBAC Contributor Permissions| FuncApp
-    MI -.->|Grants Blob Write Access| ACI
-    
-    ACI -->|5. Generates & Saves PDF| Storage
-    Storage -.->|6. Public URL Accessed| User```
-
+![Architecture Diagram)](docs/Architecture.png)
 
 Description: This architecture diagram illustrates the complete TaskFlow pipeline showing all components: GitHub repository for version control, App Service hosting the web frontend, Durable Functions orchestrating the workflow, AKS running the validation API service, ACI executing report jobs, Blob Storage persisting generated PDFs, Azure Container Registry storing Docker images, and IAM/Managed Identity providing secure permissions.
 
