@@ -256,7 +256,7 @@ Description: This screenshot shows an order with a quantity exceeding 100 being 
 ## Task 8: Write-up and Architecture Diagram (5 points)
 
 ### Evidence 8.1: Architecture Diagram
-`graph TD
+```graph TD
     %% Define External Entities
     User([👨‍💻 User / Web Browser])
     GitHub([🐙 GitHub Actions CI/CD])
@@ -297,7 +297,7 @@ Description: This screenshot shows an order with a quantity exceeding 100 being 
     MI -.->|Grants Blob Write Access| ACI
     
     ACI -->|5. Generates & Saves PDF| Storage
-    Storage -.->|6. Public URL Accessed| User`
+    Storage -.->|6. Public URL Accessed| User```
 
 
 Description: This architecture diagram illustrates the complete TaskFlow pipeline showing all components: GitHub repository for version control, App Service hosting the web frontend, Durable Functions orchestrating the workflow, AKS running the validation API service, ACI executing report jobs, Blob Storage persisting generated PDFs, Azure Container Registry storing Docker images, and IAM/Managed Identity providing secure permissions.
@@ -329,8 +329,6 @@ Description: This architecture diagram illustrates the complete TaskFlow pipelin
 **Problem 3 - Sequential Dependency Management:** Durable Functions automatically handle the orchestration of sequential steps where each step depends on the previous one's result. A plain HTTP implementation would require complex coordination logic to ensure the validate step completes before triggering the report step, and handle cases where one step fails mid-pipeline.
 
 ### Question 8.5: Cost Review
-
-![Cost Management Screenshot](docs/cost-review.png)
 
 Description: This Cost Management screenshot scoped to the rg-pa4-26100254 resource group shows the cost breakdown across services. The most expensive resource is typically the AKS cluster due to its continuous node provisioning, even during idle periods when the validation service is not processing requests. This is followed by storage costs for maintaining the persistent Blob Storage and ACR repositories. The App Service and Function App costs are generally lower due to their consumption-based or lean compute models.
 
