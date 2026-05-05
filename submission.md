@@ -34,24 +34,31 @@ Copy this file to <code style="color:#111827;background:#ddd6fe;padding:2px 4px;
 
 ### Evidence 1.1: Forked Repository
 
-<img alt="" src="../ss/1.1.png">
+![Forked Repository](docs/1.1.png)
 
 Description: My working fork for CS487 PA4. This repository contains the starter structure for building an Azure TaskFlow pipeline using App Service, Durable Functions, AKS, ACI, Blob Storage, and ACR.
 
 ### Evidence 1.2: App Service Overview
-<img alt="" src="../ss/1.2.png">
-Description: he App Service (pa4-26100254) is successfully deployed and running within the rg-pa4-26100254 resource group. It is hosted in the swedencentral region on a Linux runtime. The public URL for the Web App is [https://pa4-26100254.azurewebsites.net/](https://pa4-26100254.azurewebsites.net/).
+
+![App Service Overview](docs/1.2.png)
+
+Description: The App Service (pa4-26100254) is successfully deployed and running within the rg-pa4-26100254 resource group. It is hosted in the swedencentral region on a Linux runtime. The public URL for the Web App is [https://pa4-26100254.azurewebsites.net/](https://pa4-26100254.azurewebsites.net/).
 
 ### Evidence 1.3: Deployment Center / GitHub Actions
 
-<img alt="" src="../ss/1.3.png">
+![Deployment Center GitHub Actions](docs/1.3.png)
+
 Description: This screenshot demonstrates the Continuous Integration and Continuous Deployment (CI/CD) pipeline configured via the Azure Deployment Center. The Azure Web App (pa4-26100254) is successfully linked to the forked GitHub repository. A GitHub Actions workflow is established so that any new commits pushed to the main branch automatically trigger a build and deploy process directly to the App Service.
 
 ### Evidence 1.4: Live Web UI
 
-<img alt="" src="../ss/1.5.png">
+![Form Before Submit](docs/1.5.png)
+
 Description: This screenshot confirms that the Azure App Service is successfully serving the frontend. The TaskFlow web interface is fully loaded and operational in the browser, demonstrating that the application is live and accessible to users via its public URL.
-<img alt="" src="../ss/1.4.png">
+
+![Web UI Running Status](docs/1.4.png)
+
+Description: This screenshot shows the TaskFlow application displaying the running status of an order in the user interface, confirming that the frontend is successfully communicating with the backend services and reflecting the orchestration workflow state.
 
 ---
 
@@ -59,20 +66,29 @@ Description: This screenshot confirms that the Azure App Service is successfully
 
 ### Evidence 2.1: ACR Overview
 
-<img alt="" src="../ss/2.1.png">
+![ACR Overview](docs/2.1.png)
+
 Description: This screenshot displays the Azure Container Registry (ACR) named pa426100254 successfully deployed within the rg-pa4-26100254 resource group. The registry is provisioned using the Basic SKU, providing a cost-effective, private environment to host the Docker images (validate-api and report-job) required for the backend pipeline.
 
 ### Evidence 2.2: Docker Builds
 
-<img alt="" src="../ss/2.2.png">
+![Docker Builds Output](docs/2.2.png)
+
 Description: This screenshot verifies the successful local Docker builds for the three core container images used in the backend pipeline. The validate-api image was built from the validate-api/ directory, the report-job image was produced from the report-job/ directory, and the func-app image was generated from the Function App's root directory.
-<img alt="" src="../ss/2.3.png">
+
+![Docker Images List](docs/2.3.png)
+
+Description: This screenshot displays the list of successfully built Docker images confirming that all three container images are present and ready to be pushed to the Azure Container Registry.
+
 ### Evidence 2.3: ACR Repositories
 
-TODO: Embed screenshot or CLI output showing all three repositories in ACR.
-<img alt="" src="../ss/2.4.png">
+![ACR Repositories](docs/2.4.png)
+
 Description: This screenshot provides evidence of the successful image push to the Azure Container Registry (pa426100254). It confirms that all three required Docker repositories—validate-api, report-job, and func-app—are present and securely tagged with version v1, proving they are ready to be pulled by the compute services (AKS, ACI, and App Service).
-<img alt="" src="../ss/2.5.png">
+
+![ACR Image Details](docs/2.5.png)
+
+Description: This screenshot shows the detailed view of the ACR repositories with their tags and metadata, confirming the images are properly stored and accessible for deployment.
 
 ---
 
@@ -85,7 +101,8 @@ Description: The complete source code for the serverless application, located in
 
 ### Evidence 3.2: Local Function Handler Listing
 
-<img alt="" src="../ss/3.1.png">
+![Local Function Handler Listing](docs/3.1.png)
+
 Description: This screenshot shows the local terminal output after running the func start command within the function-app directory. It confirms that the Azure Durable Functions runtime successfully discovered and loaded all required function handlers: the HTTP starter (http_starter), the orchestrator (my_orchestrator), and both activity functions (validate_activity and report_activity), indicating the code is correctly structured for local execution.
 
 ---
@@ -99,6 +116,8 @@ Description: This screenshot shows the local terminal output after running the f
 Description: This screenshot verifies the container configuration for the deployed Function App (pa4-26100254-func). It confirms that the app is successfully configured to pull and run your custom Docker image hosted in the Azure Container Registry, specifically using the image URI: pa426100254.azurecr.io/func-app:v1.
 
 ![Function App Image Settings](docs/4.2.png)
+
+Description: This screenshot shows the detailed container settings for the Function App including the image source, registry credentials, and pull behavior configuration.
 
 ### Evidence 4.2: Orchestration Smoke Test
 
