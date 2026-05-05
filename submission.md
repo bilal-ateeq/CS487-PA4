@@ -227,29 +227,27 @@ Description: This screenshot shows the Web App's application settings with `FUNC
 
 ![Form Before Submit](docs/7.2.png)
 
-![Order Running Status](docs/7.2.1.png)
+![Order Running Status](docs/7.3.png)
 
-![Order Completed Status](docs/7.2.2.png)
+![Order Completed Status](docs/7.4.png)
 
-![PDF Report Link](docs/7.2.3.png)
-
-![Final Report Generated](docs/7.2.4.png)
 
 Description: These screenshots demonstrate the complete happy path of the TaskFlow application. The form shows the order submission interface, followed by the "Running" status as the orchestration workflow processes the order through validation and report generation. Once completed, the UI displays the "Completed" status with a direct link to the generated PDF report stored in Blob Storage, confirming the end-to-end pipeline executed successfully with a valid order payload.
 
 ### Evidence 7.3: Backend Participation
 
-![Function App Invocation](docs/7.3.png)
+![Function App Invocation](docs/7.2.1.png)
 
-![AKS Validator Evidence](docs/7.3.1.png)
+![AKS Validator Evidence](docs/7.2.2.png)
 
-![ACI Report Execution](docs/7.3.2.png)
+![ACI Report Execution](docs/7.2.3.png)
 
 Description: These screenshots trace the same order ID across all backend services. The Function App shows the orchestration instance being invoked, the AKS validator demonstrates the order passing validation, and the ACI shows the report job executing to completion. Together, they prove the entire pipeline participated in processing the order with a consistent order ID throughout.
 
 ### Evidence 7.4: Reject Path UI
 
-![Rejected Order (qty > 100)](docs/7.4.png)
+![Rejected Order (qty > 100)](docs/7.3.1.png)
+![Rejected Order (qty > 100)](docs/7.3.2.png)
 
 Description: This screenshot shows an order with a quantity exceeding 100 being rejected by the validator. The orchestration workflow terminates immediately without creating an ACI report job, demonstrating the conditional logic that prevents unnecessary compute resource usage for invalid orders.
 
@@ -258,8 +256,49 @@ Description: This screenshot shows an order with a quantity exceeding 100 being 
 ## Task 8: Write-up and Architecture Diagram (5 points)
 
 ### Evidence 8.1: Architecture Diagram
+`graph TD
+    %% Define External Entities
+    User([👨‍💻 User / Web Browser])
+    GitHub([🐙 GitHub Actions CI/CD])
 
-![TaskFlow Architecture Diagram](docs/architecture.png)
+    %% Define Azure Resource Group box
+    subgraph "Resource Group: rg-pa4-26100254 (Sweden Central)"
+        %% UI and Compute Services
+        WebApp[🌐 Azure App Service<br/>Frontend Web UI]
+        FuncApp[⚡ Azure Function App<br/>Durable Orchestrator]
+        AKS[🚢 Azure Kubernetes Service<br/>Validator API]
+        ACI[📦 Azure Container Instances<br/>PDF Report Job]
+        
+        %% Storage & Registry
+        Storage[(💾 Azure Storage Account<br/>Blob Container)]
+        ACR[🔐 Azure Container Registry<br/>Docker Images]
+        
+        %% Security
+        MI{{🔑 Managed Identity}}
+    end
+
+    %% CI/CD Flow
+    GitHub -->|Continuous Deployment| WebApp
+
+    %% Registry Flows (Hidden dependencies)
+    ACR -.->|Pulls func-app:v1| FuncApp
+    ACR -.->|Pulls validate-api:v1| AKS
+    ACR -.->|Pulls report-job:v1| ACI
+
+    %% Application Data Flow
+    User -->|1. Submits Order Form| WebApp
+    WebApp -->|2. HTTP POST Status Trigger| FuncApp
+    
+    FuncApp -->|3. validate_activity| AKS
+    AKS -.->|Returns Valid/Rejected| FuncApp
+    
+    FuncApp -->|4. report_activity (If Valid)| ACI
+    MI -.->|Grants RBAC Contributor Permissions| FuncApp
+    MI -.->|Grants Blob Write Access| ACI
+    
+    ACI -->|5. Generates & Saves PDF| Storage
+    Storage -.->|6. Public URL Accessed| User`
+
 
 Description: This architecture diagram illustrates the complete TaskFlow pipeline showing all components: GitHub repository for version control, App Service hosting the web frontend, Durable Functions orchestrating the workflow, AKS running the validation API service, ACI executing report jobs, Blob Storage persisting generated PDFs, Azure Container Registry storing Docker images, and IAM/Managed Identity providing secure permissions.
 
